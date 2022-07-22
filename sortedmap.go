@@ -1,6 +1,8 @@
 package kmap
 
 type sortedMap[K comparable, V comparable] struct {
+	keys  []K
+	store map[K]V
 }
 
 func NewSortedMap[K comparable, V comparable]() Map[K, V] {
