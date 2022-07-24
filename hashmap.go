@@ -78,5 +78,5 @@ func (m *hashMap[K, V]) Size() int {
 }
 
 func (m *hashMap[K, V]) IsEmpty() bool {
-	return len(m.store) == 0
+	return m.Size() == 0
 }

@@ -6,65 +6,83 @@ type sortedMap[K comparable, V comparable] struct {
 }
 
 func NewSortedMap[K comparable, V comparable]() Map[K, V] {
-	return &sortedMap[K, V]{}
+	return &sortedMap[K, V]{
+		store: make(map[K]V),
+	}
 }
 
-func (s *sortedMap[K, V]) Get(key K) V {
-	//TODO implement me
-	panic("implement me")
+func (m *sortedMap[K, V]) Get(key K) V {
+	return m.store[key]
 }
 
-func (s *sortedMap[K, V]) GetOrDefault(key K, defaultValue V) V {
-	//TODO implement me
-	panic("implement me")
+func (m *sortedMap[K, V]) GetOrDefault(key K, defaultValue V) V {
+	v, has := m.store[key]
+	if !has {
+		return defaultValue
+	}
+	return v
 }
 
-func (s *sortedMap[K, V]) Put(key K, value V) {
-	//TODO implement me
-	panic("implement me")
+func (m *sortedMap[K, V]) Put(key K, value V) {
+	m.store[key] = value
+	m.keys = append(m.keys, key)
 }
 
-func (s *sortedMap[K, V]) PutIfAbsent(key K, value V) V {
-	//TODO implement me
-	panic("implement me")
+func (m *sortedMap[K, V]) PutIfAbsent(key K, value V) V {
+	if m.ContainsKey(key) {
+		return m.store[key]
+	}
+
+	m.store[key] = value
+	m.keys = append(m.keys, key)
+	return nil
 }
 
-func (s *sortedMap[K, V]) Clear() {
-	//TODO implement me
-	panic("implement me")
+func (m *sortedMap[K, V]) Clear() {
+	m.store = make(map[K]V)
+	m.keys = []K{}
 }
 
-func (s *sortedMap[K, V]) ContainsKey(key K) bool {
-	//TODO implement me
-	panic("implement me")
+func (m *sortedMap[K, V]) ContainsKey(key K) bool {
+	_, has := m.store[key]
+	return has
 }
 
-func (s *sortedMap[K, V]) ContainsValue(value V) bool {
-	//TODO implement me
-	panic("implement me")
+func (m *sortedMap[K, V]) ContainsValue(value V) bool {
+	for _, v := range m.Values() {
+		if v == value {
+			return true
+		}
+	}
+	return false
 }
 
-func (s *sortedMap[K, V]) Keys() []K {
-	//TODO implement me
-	panic("implement me")
+func (m *sortedMap[K, V]) Keys() []K {
+	return m.keys
 }
 
-func (s *sortedMap[K, V]) Values() []V {
-	//TODO implement me
-	panic("implement me")
+func (m *sortedMap[K, V]) Values() []V {
+	values := make([]V, 0, len(m.store))
+	for _, v := range m.store {
+		values = append(values, v)
+	}
+	return values
 }
 
-func (s *sortedMap[K, V]) Remove(key K) {
-	//TODO implement me
-	panic("implement me")
+func (m *sortedMap[K, V]) Remove(key K) {
+	delete(m.store, key)
+	for i, k := range m.keys {
+		if k == key {
+			m.keys = append(m.keys[:i], m.keys[i+1:]...)
+			break
+		}
+	}
 }
 
-func (s *sortedMap[K, V]) Size() int {
-	//TODO implement me
-	panic("implement me")
+func (m *sortedMap[K, V]) Size() int {
+	return len(m.keys)
 }
 
-func (s *sortedMap[K, V]) IsEmpty() bool {
-	//TODO implement me
-	panic("implement me")
+func (m *sortedMap[K, V]) IsEmpty() bool {
+	return m.Size() == 0
 }
