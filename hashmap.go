@@ -26,15 +26,6 @@ func (m *hashMap[K, V]) Put(key K, value V) {
 	m.store[key] = value
 }
 
-func (m *hashMap[K, V]) PutIfAbsent(key K, value V) V {
-	if m.ContainsKey(key) {
-		return m.store[key]
-	}
-
-	m.store[key] = value
-	return nil
-}
-
 func (m *hashMap[K, V]) Clear() {
 	m.store = make(map[K]V)
 }

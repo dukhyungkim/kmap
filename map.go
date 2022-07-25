@@ -4,7 +4,6 @@ type Map[K comparable, V comparable] interface {
 	Get(key K) V
 	GetOrDefault(key K, defaultValue V) V
 	Put(key K, value V)
-	PutIfAbsent(key K, value V) V
 	Clear()
 	ContainsKey(key K) bool
 	ContainsValue(value V) bool

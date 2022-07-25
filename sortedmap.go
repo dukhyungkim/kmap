@@ -28,16 +28,6 @@ func (m *sortedMap[K, V]) Put(key K, value V) {
 	m.keys = append(m.keys, key)
 }
 
-func (m *sortedMap[K, V]) PutIfAbsent(key K, value V) V {
-	if m.ContainsKey(key) {
-		return m.store[key]
-	}
-
-	m.store[key] = value
-	m.keys = append(m.keys, key)
-	return nil
-}
-
 func (m *sortedMap[K, V]) Clear() {
 	m.store = make(map[K]V)
 	m.keys = []K{}
