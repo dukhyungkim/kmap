@@ -1,10 +1,10 @@
 package kmap
 
-type hashMap[K comparable, V comparable] struct {
+type hashMap[K KeyAble, V comparable] struct {
 	store map[K]V
 }
 
-func NewHashMap[K comparable, V comparable]() Map[K, V] {
+func NewHashMap[K KeyAble, V comparable]() Map[K, V] {
 	return &hashMap[K, V]{
 		store: make(map[K]V),
 	}

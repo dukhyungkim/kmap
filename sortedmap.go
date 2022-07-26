@@ -1,11 +1,13 @@
 package kmap
 
-type sortedMap[K comparable, V comparable] struct {
+import "sort"
+
+type sortedMap[K KeyAble, V comparable] struct {
 	keys  []K
 	store map[K]V
 }
 
-func NewSortedMap[K comparable, V comparable]() Map[K, V] {
+func NewSortedMap[K KeyAble, V comparable]() Map[K, V] {
 	return &sortedMap[K, V]{
 		store: make(map[K]V),
 	}
@@ -24,8 +26,13 @@ func (m *sortedMap[K, V]) GetOrDefault(key K, defaultValue V) V {
 }
 
 func (m *sortedMap[K, V]) Put(key K, value V) {
+	if _, has := m.store[key]; !has {
+		m.keys = append(m.keys, key)
+		sort.Slice(m.keys, func(i, j int) bool {
+			return m.keys[i] < m.keys[j]
+		})
+	}
 	m.store[key] = value
-	m.keys = append(m.keys, key)
 }
 
 func (m *sortedMap[K, V]) Clear() {

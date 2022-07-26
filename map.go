@@ -1,6 +1,10 @@
 package kmap
 
-type Map[K comparable, V comparable] interface {
+type KeyAble interface {
+	~string | ~int | ~float32 | ~float64
+}
+
+type Map[K KeyAble, V comparable] interface {
 	Get(key K) V
 	GetOrDefault(key K, defaultValue V) V
 	Put(key K, value V)
