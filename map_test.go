@@ -14,6 +14,54 @@ func init() {
 	rand.Seed(time.Now().Unix())
 }
 
+func Test_Map_Put(t *testing.T) {
+	type args struct {
+		key   string
+		value int
+	}
+	tests := []struct {
+		name string
+		m    Map[string, int]
+		args args
+		want int
+	}{
+		{
+			name: "no duplicated keys for hashMap",
+			m:    NewHashMap[string, int](),
+			args: args{
+				key:   uuid.NewString(),
+				value: rand.Intn(100),
+			},
+			want: 1,
+		},
+		{
+			name: "no duplicated keys for sortedMap",
+			m:    NewSortedMap[string, int](),
+			args: args{
+				key:   uuid.NewString(),
+				value: rand.Intn(100),
+			},
+			want: 1,
+		},
+		{
+			name: "no duplicated keys for linkedHashMap",
+			m:    NewLinkedHashMap[string, int](),
+			args: args{
+				key:   uuid.NewString(),
+				value: rand.Intn(100),
+			},
+			want: 1,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.m.Put(tt.args.key, tt.args.value)
+			tt.m.Put(tt.args.key, tt.args.value)
+			assert.Equal(t, tt.m.Size(), tt.want)
+		})
+	}
+}
+
 func Test_Map_PutGet(t *testing.T) {
 	testValue := rand.Intn(100)
 
@@ -40,6 +88,15 @@ func Test_Map_PutGet(t *testing.T) {
 		{
 			name: "sortedMap",
 			maps: NewSortedMap[string, int](),
+			args: args{
+				key:   uuid.NewString(),
+				value: testValue,
+			},
+			want: testValue,
+		},
+		{
+			name: "linkedHashMap",
+			maps: NewLinkedHashMap[string, int](),
 			args: args{
 				key:   uuid.NewString(),
 				value: testValue,
@@ -95,6 +152,17 @@ func Test_Map_GetOrDefault(t *testing.T) {
 			wantGetOrDefault: testDefaultValue,
 			wantGet:          testValue,
 		},
+		{
+			name: "linkedHashMap",
+			maps: NewLinkedHashMap[string, int](),
+			args: args{
+				key:          uuid.NewString(),
+				value:        testValue,
+				defaultValue: testDefaultValue,
+			},
+			wantGetOrDefault: testDefaultValue,
+			wantGet:          testValue,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -132,6 +200,14 @@ func Test_Map_SizeClear(t *testing.T) {
 		{
 			name: "sortedMap",
 			maps: NewSortedMap[string, int](),
+			args: args{
+				size: size,
+			},
+			wantSize: size,
+		},
+		{
+			name: "linkedHashMap",
+			maps: NewLinkedHashMap[string, int](),
 			args: args{
 				size: size,
 			},
@@ -176,6 +252,14 @@ func Test_Map_ContainsKeyValue(t *testing.T) {
 		{
 			name: "sortedMap",
 			maps: NewSortedMap[string, int](),
+			args: args{
+				key:   key,
+				value: value,
+			},
+		},
+		{
+			name: "linkedHashMap",
+			maps: NewLinkedHashMap[string, int](),
 			args: args{
 				key:   key,
 				value: value,
@@ -249,6 +333,16 @@ func Test_Map_KeysValues(t *testing.T) {
 			wantKeys:   keys,
 			wantValues: values,
 		},
+		{
+			name: "linkedHashMap",
+			maps: NewLinkedHashMap[string, int](),
+			args: args{
+				keys:   keys,
+				values: values,
+			},
+			wantKeys:   keys,
+			wantValues: values,
+		},
 	}
 
 	for _, tt := range tests {
@@ -297,6 +391,14 @@ func Test_Map_RemoveIsEmpty(t *testing.T) {
 		{
 			name: "sortedMap",
 			maps: NewSortedMap[string, int](),
+			args: args{
+				key:   key,
+				value: value,
+			},
+		},
+		{
+			name: "linkedHashMap",
+			maps: NewLinkedHashMap[string, int](),
 			args: args{
 				key:   key,
 				value: value,

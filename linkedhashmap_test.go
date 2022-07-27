@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_sortedMap_Keys(t *testing.T) {
+func Test_linkedHashMap_Keys(t *testing.T) {
 	type args struct {
 		keys []string
 	}
@@ -19,11 +19,11 @@ func Test_sortedMap_Keys(t *testing.T) {
 	}{
 		{
 			name: "put unsorted keys",
-			m:    NewSortedMap[string, int](),
+			m:    NewLinkedHashMap[string, int](),
 			args: args{
-				keys: []string{"F", "D", "C", "B", "A"},
+				keys: []string{"D", "F", "A", "C", "B"},
 			},
-			want: []string{"A", "B", "C", "D", "F"},
+			want: []string{"D", "F", "A", "C", "B"},
 		},
 	}
 	for _, tt := range tests {
