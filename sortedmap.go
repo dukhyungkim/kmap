@@ -3,46 +3,29 @@ package kmap
 import "sort"
 
 type sortedMap[K KeyAble, V comparable] struct {
-	keys  []K
-	store map[K]V
+	keys []K
+	Map[K, V]
 }
 
 func NewSortedMap[K KeyAble, V comparable]() Map[K, V] {
 	return &sortedMap[K, V]{
-		store: make(map[K]V),
+		Map: NewHashMap[K, V](),
 	}
-}
-
-func (m *sortedMap[K, V]) Get(key K) V {
-	return m.store[key]
-}
-
-func (m *sortedMap[K, V]) GetOrDefault(key K, defaultValue V) V {
-	v, has := m.store[key]
-	if !has {
-		return defaultValue
-	}
-	return v
 }
 
 func (m *sortedMap[K, V]) Put(key K, value V) {
-	if _, has := m.store[key]; !has {
+	if !m.Map.ContainsKey(key) {
 		m.keys = append(m.keys, key)
 		sort.Slice(m.keys, func(i, j int) bool {
 			return m.keys[i] < m.keys[j]
 		})
 	}
-	m.store[key] = value
+	m.Map.Put(key, value)
 }
 
 func (m *sortedMap[K, V]) Clear() {
-	m.store = make(map[K]V)
+	m.Map.Clear()
 	m.keys = []K{}
-}
-
-func (m *sortedMap[K, V]) ContainsKey(key K) bool {
-	_, has := m.store[key]
-	return has
 }
 
 func (m *sortedMap[K, V]) ContainsValue(value V) bool {
@@ -58,16 +41,8 @@ func (m *sortedMap[K, V]) Keys() []K {
 	return m.keys
 }
 
-func (m *sortedMap[K, V]) Values() []V {
-	values := make([]V, 0, len(m.store))
-	for _, v := range m.store {
-		values = append(values, v)
-	}
-	return values
-}
-
 func (m *sortedMap[K, V]) Remove(key K) {
-	delete(m.store, key)
+	m.Map.Remove(key)
 	for i, k := range m.keys {
 		if k == key {
 			m.keys = append(m.keys[:i], m.keys[i+1:]...)
@@ -78,8 +53,4 @@ func (m *sortedMap[K, V]) Remove(key K) {
 
 func (m *sortedMap[K, V]) Size() int {
 	return len(m.keys)
-}
-
-func (m *sortedMap[K, V]) IsEmpty() bool {
-	return m.Size() == 0
 }
